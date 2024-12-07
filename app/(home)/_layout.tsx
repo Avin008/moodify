@@ -1,9 +1,14 @@
 import { Tabs } from "expo-router";
 import CustomTabBar from "@/components/CustomTabBar";
-import { View } from "react-native";
+import { LogBox, Platform, View } from "react-native";
 import MiniPlayer from "@/components/MiniPlayer";
+import { useEffect } from "react";
+import TrackPlayer from "react-native-track-player";
 
 const Layout = () => {
+  useEffect(() => {
+    Platform.OS === "android" && TrackPlayer.setupPlayer();
+  }, []);
   return (
     <Tabs
       tabBar={(tabBarProps) => {
@@ -19,28 +24,24 @@ const Layout = () => {
         name="home"
         options={{
           headerShown: false,
-          animation: "fade",
         }}
       />
       <Tabs.Screen
         name="mood"
         options={{
           headerShown: false,
-          animation: "fade",
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
           headerShown: false,
-          animation: "fade",
         }}
       />
       <Tabs.Screen
         name="library"
         options={{
           headerShown: false,
-          animation: "fade",
         }}
       />
     </Tabs>

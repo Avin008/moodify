@@ -3,8 +3,10 @@ import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-
+import TrackPlayer from "react-native-track-player";
+import PlaybackService from "../service/PlaybackService";
 SplashScreen.preventAutoHideAsync();
+TrackPlayer.registerPlaybackService(() => PlaybackService);
 
 export default function RootLayout() {
   const [loaded] = useFonts({
