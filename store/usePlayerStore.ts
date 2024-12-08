@@ -19,6 +19,7 @@ interface PlayerStore {
   allTracks: Track[];
   isShuffling: boolean;
   isLooping: boolean;
+  isPlaying: boolean;
   clearCurrentPlayingTrack: () => Promise<void>;
   setCurrentPlayingTrack: (track: Track) => Promise<void>;
   setCurrentTrack: (track: Track) => Promise<void>;
@@ -37,6 +38,7 @@ export const usePlayerStore = create<PlayerStore>()(
       allTracks: [],
       isShuffling: false,
       isLooping: false,
+      isPlaying: false,
       clearCurrentPlayingTrack: async () => {
         set({ currentPlayingTrack: null });
       },
@@ -52,10 +54,13 @@ export const usePlayerStore = create<PlayerStore>()(
         set({ isLooping: looping });
       },
       playTrack: async (track: Track) => {
-        set({ currentPlayingTrack: track });
+        set({ currentPlayingTrack: track, isPlaying: true });
         TrackPlayer.play();
       },
-      pauseTrack: async () => {},
+      pauseTrack: async () => {
+        set({ isPlaying: false });
+        TrackPlayer.pause();
+      },
       nextTrack: async () => {},
       previousTrack: async () => {},
     }),

@@ -1,4 +1,8 @@
-import TrackPlayer, { Event, Capability } from "react-native-track-player";
+import TrackPlayer, {
+  Event,
+  Capability,
+  AppKilledPlaybackBehavior,
+} from "react-native-track-player";
 
 const PlaybackService = async () => {
   await TrackPlayer.setupPlayer();
@@ -24,6 +28,10 @@ const PlaybackService = async () => {
   });
 
   await TrackPlayer.updateOptions({
+    android: {
+      appKilledPlaybackBehavior:
+        AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+    },
     capabilities: [
       Capability.Play,
       Capability.Pause,

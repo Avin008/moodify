@@ -2,6 +2,7 @@ import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
 import { usePlayerStore } from "@/store/usePlayerStore";
+import { isPlaying } from "react-native-track-player";
 
 const MiniPlayer = () => {
   const track = {
@@ -9,11 +10,15 @@ const MiniPlayer = () => {
     url: "https://old.downloadming.co/2016a/bollywood%20mp3/M.S%20Dhoni%20-%20Kaun%20Tujhe%20-%20Armaan%20Malik%20Version%20(2017)/01%20-%20Kaun%20Tujhe%20(Armaan%20Malik%20Version)%20(320%20Kbps).mp3", // Replace with actual audio URL
     title: "Kaun Tujhe",
     artist: "Armaan Malik",
-    artwork: "https://picsum.photos/60",
   };
 
-  const { currentPlayingTrack, setCurrentPlayingTrack, playTrack } =
-    usePlayerStore();
+  const {
+    currentPlayingTrack,
+    pauseTrack,
+    isPlaying,
+    setCurrentPlayingTrack,
+    playTrack,
+  } = usePlayerStore();
 
   return (
     <TouchableOpacity style={styles.container}>
@@ -36,15 +41,26 @@ const MiniPlayer = () => {
           <TouchableOpacity>
             <Feather name="skip-back" size={24} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.playButton}
-            onPress={() => {
-              setCurrentPlayingTrack(track);
-              playTrack(track);
-            }}
-          >
-            <Feather name="play" size={24} color="#fff" />
-          </TouchableOpacity>
+          {!isPlaying ? (
+            <TouchableOpacity
+              style={styles.playButton}
+              onPress={() => {
+                setCurrentPlayingTrack(track);
+                playTrack(track);
+              }}
+            >
+              <Feather name="play" size={24} color="#fff" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.playButton}
+              onPress={() => {
+                pauseTrack();
+              }}
+            >
+              <Feather name="pause" size={24} color="#fff" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity>
             <Feather name="skip-forward" size={24} color="#fff" />
           </TouchableOpacity>
