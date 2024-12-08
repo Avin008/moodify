@@ -1,37 +1,19 @@
 import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather } from "@expo/vector-icons";
-import TrackPlayer from "react-native-track-player";
-import { useState } from "react";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 const MiniPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const togglePlayback = async () => {
-    try {
-      const currentTrack = await TrackPlayer.getCurrentTrack();
-
-      if (currentTrack === null) {
-        // Add track if none exists
-        await TrackPlayer.add({
-          id: "1",
-          url: "https://old.downloadming.co/2016a/bollywood%20mp3/M.S%20Dhoni%20-%20Kaun%20Tujhe%20-%20Armaan%20Malik%20Version%20(2017)/01%20-%20Kaun%20Tujhe%20(Armaan%20Malik%20Version)%20(320%20Kbps).mp3", // Replace with actual audio URL
-          title: "Kaun Tujhe",
-          artist: "Armaan Malik",
-          artwork: "https://picsum.photos/60",
-        });
-      }
-
-      if (isPlaying) {
-        await TrackPlayer.pause();
-      } else {
-        await TrackPlayer.play();
-      }
-      setIsPlaying(!isPlaying);
-    } catch (error) {
-      console.log("Error toggling playback:", error);
-    }
+  const track = {
+    id: "1",
+    url: "https://old.downloadming.co/2016a/bollywood%20mp3/M.S%20Dhoni%20-%20Kaun%20Tujhe%20-%20Armaan%20Malik%20Version%20(2017)/01%20-%20Kaun%20Tujhe%20(Armaan%20Malik%20Version)%20(320%20Kbps).mp3", // Replace with actual audio URL
+    title: "Kaun Tujhe",
+    artist: "Armaan Malik",
+    artwork: "https://picsum.photos/60",
   };
+
+  const { currentPlayingTrack, setCurrentPlayingTrack, playTrack } =
+    usePlayerStore();
 
   return (
     <TouchableOpacity style={styles.container}>
@@ -47,14 +29,20 @@ const MiniPlayer = () => {
           style={styles.albumArt}
         />
         <View style={styles.songInfo}>
-          <Text style={styles.title}>Song Title</Text>
-          <Text style={styles.artist}>Artist Name</Text>
+          <Text style={styles.title}>{currentPlayingTrack?.title}</Text>
+          <Text style={styles.artist}>{currentPlayingTrack?.artist}</Text>
         </View>
         <View style={styles.controls}>
           <TouchableOpacity>
             <Feather name="skip-back" size={24} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={togglePlayback} style={styles.playButton}>
+          <TouchableOpacity
+            style={styles.playButton}
+            onPress={() => {
+              setCurrentPlayingTrack(track);
+              playTrack(track);
+            }}
+          >
             <Feather name="play" size={24} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity>
